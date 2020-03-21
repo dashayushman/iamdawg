@@ -50,7 +50,7 @@ for i in range(NUM_PAGES):
     #print(search_results)
     for video in search_results["videos"]:
         dest_dir = "./video_data"
-        video_filename = os.path.join(dest_dir, f"{video['id'].mp4}")
+        video_filename = os.path.join(dest_dir, f"{video['id']}.mp4")
         if os.path.exists(video_filename):
             print("skipping as it exists")
             continue
