@@ -49,15 +49,16 @@ for i in range(NUM_PAGES):
     search_results = get_pexels_results(SEARCH_QUERY, i + 1, ITEMS_PER_PAGE)
     #print(search_results)
     for video in search_results["videos"]:
+        dest_dir = "./video_data"
+        video_filename = os.path.join(dest_dir, f"{video['id'].mp4}")
+        if os.path.exists(video_filename):
+            print("skipping as it exists")
+            continue
         print(video["id"], video["user"]["name"], video["url"])
         image_url = f"https://www.pexels.com/video/{video['id']}/download"
-        dest_dir = "./video_data"
         download_image(image_url, dest_dir, str(video["id"]))
         metadata_file = f"./video_metadata/{video['id']}.json"
         with open(metadata_file, "w") as file:
             json.dump({"download_url": image_url, "id": video['id'], "video_url": video["url"],
                        "videographer": video["url"]}, file)
         time.sleep(20)
-    if not search_results.has_next:
-        break
-    search_results = search_results.get_next_page()
