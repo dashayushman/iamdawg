@@ -11,6 +11,7 @@ pypexels = "*"
 azure-storage-blob = "*"
 opencv-contrib-python = "*"
 instabot = "*"
+tqdm = "*"
 
 [requires]
 python_version = "3.7"
