@@ -26,7 +26,6 @@ def download_image(url, root_dir, filename):
     with open(filepath, 'wb') as file:
         for chunk in response.iter_content(10000):
             file.write(chunk)
-    #os.remove(filepath)
 
 
 search_results = py_pexels.search(query='funny dogs', per_page=10)
