@@ -1,4 +1,5 @@
 import json
+import time
 from pathlib import Path
 import os
 import requests
@@ -25,15 +26,6 @@ def download_image(url, root_dir, filename):
     with open(filepath, 'wb') as file:
         for chunk in response.iter_content(10000):
             file.write(chunk)
-    try:
-        with open(filepath, "rb") as data:
-            blob = BlobClient.from_connection_string(
-                conn_str="DefaultEndpointsProtocol=https;AccountName=nsindgovtdiag;AccountKey=CVHI0omjl5e2vx7/Nw0b0z8/LEt1W6YLCbyGCZ632zqARMZvWlzx/MdXMSZpbg16xkrrEAEDGyQii4yqxK295w==;EndpointSuffix=core.windows.net",
-                container_name="highondogs",
-                blob_name=filename)
-            blob.upload_blob(data)
-    except:
-        pass
     #os.remove(filepath)
 
 
@@ -50,6 +42,7 @@ for _ in range(1):
         with open(metadata_file, "w") as file:
             json.dump({"download_url": image_url, "id": photo.id, "photo_url": photo.url,
                        "photographer": photo.photographer}, file)
+        time.sleep(20)
     if not search_results.has_next:
         break
     search_results = search_results.get_next_page()
