@@ -8,6 +8,10 @@ from tqdm import tqdm
 from random import shuffle
 import numpy as np
 
+import random
+
+random.seed(42)
+
 fontpath = "./Helvetica.ttc"
 font = ImageFont.truetype(fontpath, 32)
 
@@ -45,8 +49,8 @@ def prepare_image(image_path, text):
     textX = (resized.shape[1] - textsize[0]) // 2
     textY = (resized.shape[0] + textsize[1]) // 2 + (box_x // 2) - (textsize[1])
 
-    print(resized.shape[1], textsize[0])
-    print(resized.shape[0], textsize[1])
+    #print(resized.shape[1], textsize[0])
+    #print(resized.shape[0], textsize[1])
     # add text centered on image
 
 
@@ -69,7 +73,7 @@ def clean_caption_text(caption_text):
 def prepare_description(caption_text, hashtags, metadata):
 
     description = f"{caption_text}\n.\n.\n.\nPC: {metadata['photographer']}\n{metadata['photo_url']}"
-    description += "\n." * 7
+    description += "\n." * 3
     description += f"\n{hashtags}"
     return description
 
@@ -78,6 +82,7 @@ metadata_dir = Path("/Users/dash/Pictures/iamdawg/metadata")
 captions_path = Path("captions.txt")
 hashtags_path = Path("hashtags.txt")
 output_dir = Path("./pics")
+stories_dir = Path("./stories")
 
 caption_th = 65
 hashtags = open(str(hashtags_path), "r").read().strip()
@@ -113,8 +118,19 @@ for image_id, image_file in tqdm(enumerate(all_images)):
 
                 description = prepare_description(selected_captions, hashtags, metadata)
                 prepared_image = prepare_image(str(image_file), selected_captions)
+
                 output_image_name = f"{image_id}-{image_id}.jpg"
                 description_file_name = f"{image_id}.txt"
+
+                if (prepared_image.shape[0] / prepared_image.shape[1]) > 1.0:
+                    print(prepared_image.shape)
+                    print("pushing to stories")
+                    image_output_path = stories_dir / output_image_name
+                    desc_output_path = stories_dir / description_file_name
+                    cv2.imwrite(str(image_output_path), prepared_image)
+                    with open(str(desc_output_path), "w") as f:
+                        f.write(description)
+                        break
 
                 image_output_path = output_dir / output_image_name
                 desc_output_path = output_dir / description_file_name
